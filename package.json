@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engines": {
-    "node": "20.x"
-  },
   "scripts": {
-    "start": "node src/index.ts",
-    "build": "npm install && npx tsc && npm run copyAssets && npm run start",
+    "start": "nodemon src/index.ts",
+    "prod": "node ./public/index.js",
+    "build": "npm install && npx tsc && npm run copyAssets && npm run prod",
     "copyAssets": "node -e \"require('fs').cpSync('./assets', './public/assets', {recursive: true});\""
   },
   "keywords": [],
