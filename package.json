@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/index.ts",
     "build": "npm install && npx tsc && npm run copyAssets",
-    "copyAssets": "node -e \"require('fs').cpSync('./assets', './dist/assets', {recursive: true});\""
+    "copyAssets": "node -e \"require('fs').cpSync('./assets', './public/assets', {recursive: true});\""
   },
   "keywords": [],
   "author": "",
