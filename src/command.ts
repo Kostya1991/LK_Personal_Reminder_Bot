@@ -16,7 +16,7 @@ export function initCommand() {
 
     // Обработка команды /aboutme.
     bot.command("aboutme", async (ctx) => {
-        await ctx.replyWithPhoto(new InputFile("./assets/avatar.jpg"));
+        await ctx.replyWithPhoto(new InputFile("../assets/avatar.jpg"));
         await ctx.reply(
             `
     Привет <b>${ctx?.from?.first_name} ${ctx?.from?.last_name}.</b> &#128075; \n Меня зовут Константин, я разработчик данного бота. Если у тебя есть вопросы - ты можешь написать мне в <a href="https://t.me/KonstantinLysov">телеграмм</a>
