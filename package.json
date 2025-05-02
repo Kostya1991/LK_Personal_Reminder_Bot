@@ -8,8 +8,7 @@
   },
   "scripts": {
     "start": "node src/index.ts",
-    "prod": "node ./public/index.js",
-    "build": "npm install && npx tsc && npm run copyAssets && npm run prod",
+    "build": "npm install && npx tsc && npm run copyAssets",
     "copyAssets": "node -e \"require('fs').cpSync('./assets', './public/assets', {recursive: true});\""
   },
   "keywords": [],
