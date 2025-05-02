@@ -5,6 +5,8 @@ import {initErrorHandler} from "./error";
 import {initMessage} from "./message";
 import {sendUserEvents} from "./sendUserEvents";
 
+require("fs").cpSync("./assets", "./public/assets", {recursive: true});
+
 const ONE_DAY_TIME = 24 * 60 * 60 * 1000;
 
 /** Инициализация обработки команд */
