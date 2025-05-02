@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.ts",
-    "build": "npx tsc"
+    "build": "npx tsc && npm run copyAssets",
+    "copyAssets": "node -e \"require('fs').cpSync('./assets', './dist/assets', {recursive: true});\""
   },
   "keywords": [],
   "author": "",
