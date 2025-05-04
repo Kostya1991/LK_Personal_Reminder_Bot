@@ -4,8 +4,8 @@ import path from "path";
 const DATA_REG_EXP = new RegExp("^([0-9]{2})\\.([0-9]{2})\\.([1-2][0-9]{3})$");
 
 /** Получаем данные из json файла */
-const data = fs.readFileSync(path.resolve(__dirname, "..", "assets", "db.json"), {encoding: "utf8"});
-const dataObj: Record<string, Array<{date: string; description: string}>> = JSON.parse(data);
+const DATA = fs.readFileSync(path.resolve(__dirname, "..", "assets", "db.json"), {encoding: "utf8"});
+const DATA_OBJ: Record<string, Array<{date: string; description: string}>> = JSON.parse(DATA);
 
 /** Обновление данных в JSON файле */
 export async function updateDB(
@@ -31,14 +31,11 @@ export async function updateDB(
         return {message: "Не верный формат даты. Укажите дату в формате: ДД.ММ.ГГГГ", status: false};
     }
 
-    /** Формируем корректную дату */
-    const data = new Date(date.split(".").reverse().join("-"));
-
     /** Формируем данные для записи в json файл */
-    const payload = {date: data.toString(), description};
+    const payload = {date, description};
 
     /** Полуачаем из json по ключу пользователя все события */
-    const jsonData = dataObj[userId] ?? [];
+    const jsonData = DATA_OBJ[userId] ?? [];
     /** Сохраняем новое событие */
     jsonData.push(payload);
 
@@ -46,7 +43,7 @@ export async function updateDB(
     fs.writeFileSync(
         path.resolve(__dirname, "..", "assets", "db.json"),
         JSON.stringify({
-            ...dataObj,
+            ...DATA_OBJ,
             [userId]: jsonData,
         }),
     );
@@ -58,15 +55,12 @@ export async function updateDB(
 export function getUpcomingEvents(): Record<string, string[]> {
     const result: Record<string, string[]> = {};
 
-    Object.keys(dataObj).forEach((key: string) => {
-        const data = dataObj[key];
+    Object.keys(DATA_OBJ).forEach((key: string) => {
+        const data = DATA_OBJ[key];
 
         data.forEach(({date, description}) => {
             if (checkDate(date)) {
-                const month = new Date(date).getMonth() + 1;
-                const currentMonth = month > 9 ? month : `0${month}`;
-
-                const str = `${new Date(date).getDate()}.${currentMonth}: ${description}`;
+                const str = `${date}: ${description}`;
                 Array.isArray(result[key]) ? result[key].push(str) : (result[key] = [str]);
             }
         });
@@ -77,9 +71,7 @@ export function getUpcomingEvents(): Record<string, string[]> {
 
 function checkDate(dateString: string): boolean {
     /** Получаем день и месяц из даты из базы */
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
+    const [day, month] = dateString.split(".");
 
     /** Получаем день и месяц из текущей даты */
     const currentDate = new Date();
@@ -87,12 +79,12 @@ function checkDate(dateString: string): boolean {
     const currentMonth = currentDate.getMonth() + 1;
 
     /** Если месяц из записи и текущий не равны - значит до события еще долго */
-    if (month !== currentMonth) {
+    if (Number(month) !== currentMonth) {
         return false;
     }
 
     /** Если текущий день дальше от целевого на день и больше - оповещать не надо */
-    if (currentDay - day > 1) {
+    if (currentDay - Number(day) > 1) {
         return false;
     }
 
