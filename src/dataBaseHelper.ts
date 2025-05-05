@@ -84,7 +84,7 @@ function checkDate(dateString: string): boolean {
     }
 
     /** Если текущий день дальше от целевого на день и больше - оповещать не надо */
-    if (currentDay - Number(day) > 1) {
+    if (Number(day) - currentDay > 1) {
         return false;
     }
 
