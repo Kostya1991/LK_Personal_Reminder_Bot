@@ -3,8 +3,10 @@ import path from "path";
 
 const DATA_REG_EXP = new RegExp("^([0-9]{2})\\.([0-9]{2})\\.([1-2][0-9]{3})$");
 
+const PATH = process.env.LOCAL_ENV === "true" ? path.resolve(__dirname, "..", "assets", "db.json") : "/data/db.json";
+
 /** Получаем данные из json файла */
-const DATA = fs.readFileSync(path.resolve(__dirname, "..", "assets", "db.json"), {encoding: "utf8"});
+const DATA = fs.readFileSync(PATH, {encoding: "utf8"});
 const DATA_OBJ: Record<string, Array<{date: string; description: string}>> = JSON.parse(DATA);
 
 /** Обновление данных в JSON файле */
@@ -41,7 +43,7 @@ export async function updateDB(
 
     /** Обновляем файл с данными */
     fs.writeFileSync(
-        path.resolve(__dirname, "..", "assets", "db.json"),
+        PATH,
         JSON.stringify({
             ...DATA_OBJ,
             [userId]: jsonData,
