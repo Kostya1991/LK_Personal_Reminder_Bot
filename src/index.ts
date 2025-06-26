@@ -5,7 +5,7 @@ import {initErrorHandler} from "./error";
 import {initMessage} from "./message";
 import {sendUserEvents} from "./sendUserEvents";
 
-const ONE_DAY_TIME = 24 * 60 * 60 * 1000;
+const ONE_HOUR = 60 * 60 * 1000;
 
 /** Инициализация обработки команд */
 initCommand();
@@ -15,7 +15,13 @@ initMessage();
 initErrorHandler();
 
 /** Интервал, который раз в сутки проверяет календарь и отправляет сообщение пользователю, если есть событие */
-setInterval(async () => await sendUserEvents(), ONE_DAY_TIME);
+setInterval(async () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 10 && hour < 11) {
+        await sendUserEvents();
+    }
+}, ONE_HOUR);
 
 // Запуск бота
 bot.start();
