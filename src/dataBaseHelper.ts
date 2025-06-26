@@ -75,18 +75,14 @@ function checkDate(dateString: string): boolean {
     /** Получаем день и месяц из даты из базы */
     const [day, month] = dateString.split(".");
 
-    /** Получаем день и месяц из текущей даты */
+    /** Получаем текущую дату + 1 день */
     const currentDate = new Date();
-    const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth() + 1;
+    currentDate.setDate(currentDate.getDate() + 1);
+    const actualMonth = currentDate.getMonth() + 1;
+    const actualDay = currentDate.getDate();
 
-    /** Если месяц из записи и текущий не равны - значит до события еще долго */
-    if (Number(month) !== currentMonth) {
-        return false;
-    }
-
-    /** Если текущий день дальше от целевого на день и больше - оповещать не надо */
-    if (Number(day) - currentDay !== 1) {
+    /** Если дни и месяцы не равны - значит до события больше одного дня */
+    if (Number(day) !== actualDay || Number(month) !== actualMonth) {
         return false;
     }
 
