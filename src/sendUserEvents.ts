@@ -1,8 +1,8 @@
 import {bot} from "./bot";
 import {getUpcomingEvents} from "./dataBaseHelper";
 
-export function sendUserEvents(): void {
-    const events = getUpcomingEvents();
+export async function sendUserEvents(): Promise<void> {
+    const events = await getUpcomingEvents();
     const keys = Object.keys(events);
 
     if (!keys.length) {

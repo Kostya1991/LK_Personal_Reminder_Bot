@@ -19,6 +19,10 @@ bot.api.setMyCommands([
         command: "aboutme",
         description: "Обо мне",
     },
+    {
+        command: "list",
+        description: "Посмотреть календарь",
+    },
 ]);
 
 export {bot};

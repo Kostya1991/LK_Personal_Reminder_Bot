@@ -15,7 +15,7 @@ initMessage();
 initErrorHandler();
 
 /** Интервал, который раз в сутки проверяет календарь и отправляет сообщение пользователю, если есть событие */
-setInterval(() => sendUserEvents(), ONE_DAY_TIME);
+setInterval(async () => await sendUserEvents(), ONE_DAY_TIME);
 
 // Запуск бота
 bot.start();
