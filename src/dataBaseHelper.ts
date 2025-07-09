@@ -8,12 +8,18 @@ const DATA_REG_EXP = new RegExp("^([0-9]{2})\\.([0-9]{2})\\.([1-2][0-9]{3})$");
 const PATH = process.env.LOCAL_ENV === "true" ? path.resolve(__dirname, "..", "assets", "db.json") : "/data/db.json";
 
 /** Получаем данные из json файла */
-const DATA = fs.readFileSync(PATH, {encoding: "utf8"});
-const DATA_OBJ: Record<string, UserEvent[]> = JSON.parse(DATA);
+const getDBdata = (): Record<string, UserEvent[]> => {
+    const DATA = fs.readFileSync(PATH, {encoding: "utf8"});
+    const DATA_OBJ: Record<string, UserEvent[]> = JSON.parse(DATA);
+
+    return DATA_OBJ;
+};
 
 /** Получение списка событий */
 export function getList(userId: string): Array<string> {
-    const userList = DATA_OBJ[userId] ?? [];
+    const dataObj = getDBdata();
+
+    const userList = dataObj[userId] ?? [];
 
     if (!userList.length) {
         return ["В календаре нет событий"];
@@ -56,7 +62,8 @@ export async function updateDB(
     };
 
     /** Полуачаем из json по ключу пользователя все события */
-    const jsonData = DATA_OBJ[userId] ?? [];
+    const dataObj = getDBdata();
+    const jsonData = dataObj[userId] ?? [];
     /** Сохраняем новое событие */
     jsonData.push(payload);
 
@@ -64,7 +71,7 @@ export async function updateDB(
     fs.writeFileSync(
         PATH,
         JSON.stringify({
-            ...DATA_OBJ,
+            ...dataObj,
             [userId]: jsonData,
         }),
     );
@@ -80,7 +87,8 @@ export async function deleteEventFromDB(userId: string, id: string): Promise<boo
     }
 
     /** Полуачаем из json по ключу пользователя все события */
-    const jsonData = DATA_OBJ[userId] ?? [];
+    const dataObj = getDBdata();
+    const jsonData = dataObj[userId] ?? [];
 
     const updateData = jsonData.filter((item) => item.id !== id);
 
@@ -88,7 +96,7 @@ export async function deleteEventFromDB(userId: string, id: string): Promise<boo
     fs.writeFileSync(
         PATH,
         JSON.stringify({
-            ...DATA_OBJ,
+            ...dataObj,
             [userId]: updateData,
         }),
     );
@@ -99,9 +107,10 @@ export async function deleteEventFromDB(userId: string, id: string): Promise<boo
 /** Получить ближайшие события */
 export async function getUpcomingEvents(): Promise<Record<string, string[]>> {
     const result: Record<string, string[]> = {};
+    const dataObj = getDBdata();
 
-    Object.keys(DATA_OBJ).forEach((key: string) => {
-        const data = DATA_OBJ[key];
+    Object.keys(dataObj).forEach((key: string) => {
+        const data = dataObj[key];
 
         data.forEach(({date, description, once, id}) => {
             if (checkDate(date)) {

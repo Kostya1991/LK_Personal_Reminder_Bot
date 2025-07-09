@@ -18,7 +18,7 @@ initErrorHandler();
 setInterval(async () => {
     const hour = new Date().getHours();
 
-    if (hour >= 10 && hour < 11) {
+    if (hour === 10) {
         await sendUserEvents();
     }
 }, ONE_HOUR);
